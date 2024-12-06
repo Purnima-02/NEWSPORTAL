@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: AsyncNewsPortalDB
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend
+
+  newsportal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: newsportal
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=NewsPortal.settings
+    volumes:
+      - .:/app
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  mysql-data:
